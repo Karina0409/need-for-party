@@ -195,6 +195,7 @@
             position: relative;
         }
         
+        /* Бургер-меню - улучшенная версия */
         .burger-btn {
             background: transparent;
             border: none;
@@ -208,6 +209,16 @@
             justify-content: center;
             border-radius: 10px;
             transition: all 0.3s ease;
+            z-index: 1002; /* Выше чем сайдбар */
+        }
+
+        /* На мобильных делаем кнопку больше */
+        @media (max-width: 768px) {
+            .burger-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 32px;
+            }
         }
         
         .burger-btn:hover {
@@ -219,7 +230,7 @@
         .sidebar {
             position: fixed;
             top: 0;
-            right: -300px;
+            right: -300px; /* По умолчанию скрыт */
             width: 280px;
             height: 100vh;
             background: rgba(20, 20, 40, 0.98);
@@ -232,8 +243,21 @@
             overflow-y: auto;
         }
         
+        /* Класс active показывает меню */
         .sidebar.active {
             right: 0;
+        }
+
+        /* На мобильных устройствах меню на весь экран */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                right: -100%; /* Скрываем полностью за экраном */
+            }
+            
+            .sidebar.active {
+                right: 0;
+            }
         }
         
         .sidebar-header {
@@ -313,6 +337,26 @@
             font-size: 20px;
             width: 24px;
             text-align: center;
+        }
+
+        /* Оверлей для закрытия меню на мобильных */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        /* Показываем оверлей только когда меню открыто на мобильных */
+        @media (max-width: 768px) {
+            .sidebar.active ~ .sidebar-overlay {
+                display: block;
+            }
         }
         
         /* ============== КОНТЕНТ ============== */
@@ -663,6 +707,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Оверлей для закрытия меню (только на мобильных) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
     
     <!-- Экран приветствия -->
     <div id="welcomeScreen" class="container">
@@ -914,7 +961,30 @@
         // ============== МЕНЮ И НАВИГАЦИЯ ==============
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
             sidebar.classList.toggle('active');
+            
+            // Показываем/скрываем оверлей на мобильных
+            if (overlay) {
+                if (sidebar.classList.contains('active') && window.innerWidth <= 768) {
+                    overlay.style.display = 'block';
+                    // Блокируем скролл тела при открытом меню
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    overlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+            
+            // Закрываем меню при клике на оверлей
+            if (overlay) {
+                overlay.onclick = function() {
+                    sidebar.classList.remove('active');
+                    overlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
         }
         
         function showPage(pageId) {
@@ -932,11 +1002,14 @@
             document.getElementById(`page-${pageId}`).classList.add('active');
             
             // Активировать элемент меню
-            document.querySelector(`.menu-item[onclick*="${pageId}"]`).classList.add('active');
+            const menuItem = document.querySelector(`.menu-item[onclick*="${pageId}"]`);
+            if (menuItem) {
+                menuItem.classList.add('active');
+            }
             
             // Закрыть сайдбар на мобильных
             if (window.innerWidth <= 768) {
-                toggleSidebar();
+                toggleSidebar(); // Закрываем меню
             }
             
             // Загрузить контент страницы
