@@ -8,7 +8,7 @@ import time
 load_dotenv()
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')  # БЕЗопасно из .env файла
-WEB_APP_URL = "https://karina0409.github.io/need-for-party/index_v3.html"
+WEB_APP_URL = f"https://karina0409.github.io/need-for-party/telegram_app.html?t={int(time.time())}"
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
