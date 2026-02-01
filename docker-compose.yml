@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: nfp_backend
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DB_SERVER=sql-server-host  # изменим на имя хоста SQL Server
+      - DB_NAME=need_for_party
+      - DB_USER=${DB_USER:-sa}
+      - DB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "8000:8000"
+    extra_hosts:
+      - "sql-server-host:host-gateway"  # для Windows/Mac
+    volumes:
+      - ./backend:/app
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - nfp-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nfp_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - nfp-network
+
+networks:
+  nfp-network:
+    driver: bridge
