@@ -2,14 +2,19 @@ import telebot
 from telebot import types
 import os
 from dotenv import load_dotenv
+import time
 
 # Загружаем переменные окружения
 load_dotenv()
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')  # БЕЗопасно из .env файла
-WEB_APP_URL = "https://karina0409.github.io/need-for-party/"
+WEB_APP_URL = "https://karina0409.github.io/need-for-party/index_v3.html"
 
 bot = telebot.TeleBot(BOT_TOKEN)
+
+# Добавляем версию для сброса кэша
+current_version = int(time.time())  # Текущее время в секундах
+WEB_APP_URL = f"https://karina0409.github.io/need-for-party/?v={current_version}"
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
@@ -31,6 +36,15 @@ def send_welcome(message):
         reply_markup=markup,
         parse_mode="Markdown"
     )
+
+@bot.message_handler(commands=['clear_cache'])
+def clear_cache(message):
+    bot.send_message(
+        message.chat.id,
+        "Очистка кэша WebApp...\n"
+        "Пожалуйста, закройте и откройте бота заново."
+    )
+
 
 if __name__ == "__main__":
     print("🤖 Бот запущен...")

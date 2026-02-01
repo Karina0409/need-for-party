@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Need for Party 🎉</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        /* ============== ОБЩИЕ СТИЛИ ============== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2a 50%, #2a0a3a 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 200, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 0, 200, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(0, 255, 200, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: pulse 15s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+
+        .auth-form {
+            background: rgba(20, 20, 40, 0.95); /* Увеличить прозрачность */
+            backdrop-filter: blur(25px); /* Увеличить размытие */
+            border-radius: 20px;
+            padding: 35px 30px; /* Увеличить отступы */
+            border: 2px solid rgba(0, 200, 255, 0.3); /* Более яркая обводка */
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(0, 200, 255, 0.1) inset,
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset; /* Добавить внутреннюю обводку */
+            width: 100%;
+            max-width: 420px; /* Немного шире */
+            margin: 0 auto;
+            animation: glow 3s infinite alternate;
+        }
+
+        /* Добавьте анимацию свечения */
+        @keyframes glow {
+            0% {
+                box-shadow: 
+                    0 15px 50px rgba(0, 0, 0, 0.6),
+                    0 0 30px rgba(0, 200, 255, 0.1) inset,
+                    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            }
+            100% {
+                box-shadow: 
+                    0 15px 50px rgba(0, 0, 0, 0.6),
+                    0 0 40px rgba(0, 200, 255, 0.2) inset,
+                    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            }
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 18px 20px; /* Больше отступов */
+            background: rgba(10, 10, 30, 0.8); /* Темнее фон */
+            border: 2px solid rgba(0, 200, 255, 0.4); /* Более яркая обводка */
+            border-radius: 15px; /* Больше скругление */
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #00ccff;
+            box-shadow: 0 0 25px rgba(0, 200, 255, 0.4), 0 0 10px rgba(0, 200, 255, 0.2) inset;
+            background: rgba(10, 10, 30, 0.9);
+        }
+
+        .input-field::placeholder {
+            color: #8888cc;
+            font-weight: 400;
+        }
+
+        /* Добавьте этот стиль для кнопки регистрации */
+        .btn-register {
+            background: linear-gradient(45deg, #0066ff, #cc00ff, #ff0066);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            color: white;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 20px;
+            border-radius: 15px;
+            border: none;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.6);
+        }
+
+        .form-title {
+            font-size: 28px; /* Увеличить размер */
+            font-weight: 800; /* Жирнее */
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #00ccff, #ff00cc, #ffcc00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .input-label i {
+            margin-right: 8px;
+            color: #00ccff;
+            font-size: 16px;
+        }
+
+        /* ============== ШАПКА ============== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(20, 20, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #00ccff, #ff00cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .user-rank {
+            background: linear-gradient(45deg, #ff00cc, #00ccff);
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 0 10px rgba(255, 0, 200, 0.5);
+            display: inline-block;
+            width: fit-content;
+        }
+        
+        /* Бургер-меню */
+        .burger-menu {
+            position: relative;
+        }
+        
+        /* Бургер-меню - улучшенная версия */
+        .burger-btn {
+            background: transparent;
+            border: none;
+            color: #00ccff;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            z-index: 1002; /* Выше чем сайдбар */
+        }
+
+        /* На мобильных делаем кнопку больше */
+        @media (max-width: 768px) {
+            .burger-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 32px;
+            }
+        }
+        
+        .burger-btn:hover {
+            background: rgba(0, 200, 255, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        /* ============== САЙДБАР МЕНЮ ============== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px; /* По умолчанию скрыт */
+            width: 280px;
+            height: 100vh;
+            background: rgba(20, 20, 40, 0.98);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(0, 200, 255, 0.2);
+            box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        /* Класс active показывает меню */
+        .sidebar.active {
+            right: 0;
+        }
+
+        /* На мобильных устройствах меню на весь экран */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                right: -100%; /* Скрываем полностью за экраном */
+            }
+            
+            .sidebar.active {
+                right: 0;
+            }
+        }
+        
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+        }
+        
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 600;
+            background: linear-gradient(45deg, #00ccff, #ff00cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #ff0066;
+            font-size: 24px;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 0, 100, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(10, 10, 30, 0.5);
+            border: 1px solid rgba(0, 200, 255, 0.1);
+            border-radius: 12px;
+            color: #a0a0ff;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .menu-item:hover {
+            background: rgba(0, 200, 255, 0.1);
+            border-color: #00ccff;
+            color: #00ccff;
+            transform: translateX(-5px);
+        }
+        
+        .menu-item.active {
+            background: linear-gradient(45deg, rgba(0, 102, 255, 0.2), rgba(204, 0, 255, 0.2));
+            border-color: #00ccff;
+            color: #00ccff;
+        }
+        
+        .menu-item i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Оверлей для закрытия меню на мобильных */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        /* Показываем оверлей только когда меню открыто на мобильных */
+        @media (max-width: 768px) {
+            .sidebar.active ~ .sidebar-overlay {
+                display: block;
+            }
+        }
+        
+        /* ============== КОНТЕНТ ============== */
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Карточки */
+        .card {
+            background: rgba(20, 20, 40, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 200, 255, 0.1);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 200, 255, 0.3);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #00ccff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* ============== СТАТИСТИКА ============== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: rgba(10, 10, 30, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(0, 200, 255, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #00ccff, #ff00cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #a0a0ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* ============== КНОПКИ ============== */
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #0066ff, #cc00ff);
+            color: white;
+            box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.6);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(0, 200, 255, 0.5);
+            color: #00ccff;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 200, 255, 0.1);
+            border-color: #00ccff;
+        }
+        
+        /* QR код */
+        .qr-container {
+            text-align: center;
+            padding: 20px;
+            background: rgba(10, 10, 30, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            margin: 20px 0;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        /* Вечеринки */
+        .party-card {
+            background: rgba(10, 10, 30, 0.7);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 200, 255, 0.1);
+        }
+        
+        .party-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #00ccff;
+            margin-bottom: 10px;
+        }
+        
+        .party-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .party-detail {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #a0a0ff;
+        }
+        
+        /* Модальное окно */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: rgba(20, 20, 40, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #00ccff;
+        }
+        
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            max-width: 350px;
+            border: 1px solid;
+            display: none;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Загрузка */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid transparent;
+            border-top: 3px solid #00ccff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Экран приветствия */
+        #welcomeScreen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка -->
+    <div class="header" id="header" style="display: none;">
+        <div class="user-info">
+            <div class="user-name" id="userNameDisplay">Гость</div>
+            <div class="user-rank" id="userRankDisplay">Не авторизован</div>
+        </div>
+        
+        <div class="burger-menu">
+            <button class="burger-btn" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Сайдбар меню -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Меню</div>
+            <button class="close-btn" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="menu-items">
+            <div class="menu-item active" onclick="showPage('home')">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+            </div>
+            <div class="menu-item" onclick="showPage('verification')">
+                <i class="fas fa-shield-alt"></i>
+                <span>Верификация</span>
+            </div>
+            <div class="menu-item" onclick="showPage('parties')">
+                <i class="fas fa-glass-cheers"></i>
+                <span>Вечеринки</span>
+            </div>
+            <div class="menu-item" onclick="showPage('discounts')">
+                <i class="fas fa-tag"></i>
+                <span>Скидки</span>
+            </div>
+            <div class="menu-item" onclick="showPage('roles')">
+            <i class="fas fa-award"></i>
+            <span>Роли</span>
+            </div>
+            <div class="menu-item" onclick="showPage('gallery')">
+                <i class="fas fa-images"></i>
+                <span>Наши вечеринки</span>
+            </div>
+            <div class="menu-item" onclick="showPage('tickets')">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Мои билеты</span>
+            </div>
+            <div class="menu-item" onclick="showPage('support')">
+                <i class="fas fa-headset"></i>
+                <span>Поддержка</span>
+            </div>
+            <div class="menu-item" onclick="logout()" style="color: #ff6666;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Выйти</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Оверлей для закрытия меню (только на мобильных) -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+    
+    <!-- Экран приветствия -->
+    <div id="welcomeScreen" class="container">
+        <!-- Ваш существующий код приветствия -->
+        <div class="logo-container">
+            <div class="logo-glow"></div>
+            <div class="logo">NEED FOR PARTY</div>
+            <div class="tagline">Лучшие вечеринки в городе</div>
+        </div>
+        
+        <div class="auth-form">
+            <h2 class="form-title">🎉 Добро пожаловать!</h2>
+            
+            <div class="input-group">
+                <label class="input-label">👤 Твое имя</label>
+                <input type="text" id="userName" class="input-field" placeholder="Введи свое имя" maxlength="50">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">👥 Фамилия</label>
+                <input type="text" id="userSurname" class="input-field" placeholder="Введи свою фамилию" maxlength="50">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">📧 Email</label>
+                <input type="email" id="userEmail" class="input-field" placeholder="email@example.com">
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">👻 Никнейм</label>
+                <input type="text" id="userNickname" class="input-field" placeholder="Придумай крутой ник">
+            </div>
+
+            <div class="input-group">
+            <label class="input-label">
+                <i class="fas fa-user-plus"></i> Реферальный код (если есть)
+            </label>
+            <input type="text" id="userReferCode" class="input-field" 
+                placeholder="Введите код пригласившего" maxlength="18">
+            <div style="font-size: 12px; color: #8888cc; margin-top: 8px; font-style: italic;">
+                Оставьте пустым, если вас никто не приглашал
+            </div>
+        </div>
+            
+            <button class="btn btn-register" onclick="registerUser()">
+            <span class="btn-icon">🚀</span>
+            <span>СТАРТ ВЕЧЕРИНКИ!</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Основной контент (скрыт до авторизации) -->
+    <div id="mainApp" class="container" style="display: none;">
+        <!-- Страница: Главная -->
+        <div id="page-home" class="page active">
+            <div class="card">
+                <h2 class="card-title">📊 Моя статистика</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value" id="statVisits">0</div>
+                        <div class="stat-label">Посещений</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statInvited">0</div>
+                        <div class="stat-label">Приглашено</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statSpent">0₽</div>
+                        <div class="stat-label">В баре</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="statBattles">0</div>
+                        <div class="stat-label">Батлов</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">👥 Пригласи друзей</h2>
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 14px; color: #a0a0ff; margin-bottom: 5px;">Твой реферальный код:</div>
+                    <div style="background: rgba(0, 200, 255, 0.1); padding: 15px; border-radius: 10px; font-family: monospace; font-size: 18px; text-align: center; border: 1px solid rgba(0, 200, 255, 0.3);">
+                        <span id="referCode">XXXXXX</span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="copyReferCode()">
+                    <i class="fas fa-copy"></i> Скопировать код
+                </button>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">👑 Сменить роль</h2>
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 14px; color: #a0a0ff; margin-bottom: 10px;">Текущая роль: <span id="currentRole">Участник</span></div>
+                    <select id="roleSelect" class="input-field" style="width: 100%; margin-bottom: 15px;">
+                        <option value="participant">🎪 Участник</option>
+                        <option value="risky">🎲 Рисковый</option>
+                        <option value="soul">💃 Душа компании</option>
+                        <option value="legend">🏆 Легенда</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="changeRole()">
+                    <i class="fas fa-sync-alt"></i> Сменить роль
+                </button>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">📱 Мой QR-код</h2>
+                <div class="qr-container">
+                    <div id="qrcode"></div>
+                    <div style="font-size: 14px; color: #a0a0ff; margin-top: 10px;">
+                        Покажи этот код на входе для быстрой проверки
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Страница: Верификация -->
+        <div id="page-verification" class="page">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-shield-alt"></i> Верификация</h2>
+                <div id="verificationContent">
+                    <!-- Контент будет заполнен JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Страница: Вечеринки -->
+        <div id="page-parties" class="page">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-glass-cheers"></i> Ближайшие вечеринки</h2>
+                <div id="partiesList">
+                    <!-- Список вечеринок будет заполнен JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Страница: Скидки -->
+        <div id="page-discounts" class="page">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-tag"></i> Система скидок</h2>
+                <div id="discountsContent">
+                    <!-- Контент скидок будет заполнен JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница: Роли -->
+        <div id="page-roles" class="page">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-award"></i> Система ролей</h2>
+                <div id="rolesContent">
+                    <!-- Контент ролей будет заполнен JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Страница: Галерея -->
+        <div id="page-gallery" class="page">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-images"></i> Наши вечеринки</h2>
+                <div id="galleryContent">
+                    <!-- Галерея будет заполнена JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Страница: Мои билеты -->
+        <div id="page-tickets" class="page">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-ticket-alt"></i> Мои билеты</h2>
+                <div id="ticketsList">
+                    <!-- Список билетов будет заполнен JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Страница: Поддержка -->
+        <div id="page-support" class="page">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-headset"></i> Поддержка</h2>
+                <div id="supportContent">
+                    <!-- Контакты поддержки будут заполнены JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно покупки билета -->
+    <div class="modal-overlay" id="ticketModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">🎫 Покупка билета</div>
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="modalContent">
+                <p>Здесь будет форма покупки билета.</p>
+                <p style="color: #a0a0ff; font-size: 14px; margin-top: 15px;">
+                    ⚠️ Функционал покупки в разработке
+                </p>
+            </div>
+            <button class="btn btn-secondary" onclick="closeModal()" style="margin-top: 20px;">
+                <i class="fas fa-times"></i> Закрыть
+            </button>
+        </div>
+    </div>
+    
+    <!-- Уведомления -->
+    <div id="notification" class="notification"></div>
+    
+    <!-- Загрузка -->
+    <div id="loading" class="loading" style="display: none;">
+        <div class="loader"></div>
+        <div>Загрузка...</div>
+    </div>
+
+    <script>
+        // ============== КОНСТАНТЫ И ПЕРЕМЕННЫЕ ==============
+        const API_URL = "http://localhost:8000";
+        const tg = window.Telegram.WebApp;
+        let currentUser = null;
+        let currentPage = 'home';
+
+
+        console.log("🚀 Need for Party загружен");
+        console.log("🌐 API URL:", API_URL);
+        console.log("📱 Telegram WebApp:", typeof tg !== 'undefined' ? "доступен" : "не доступен");
+
+        
+        // ============== ИНИЦИАЛИЗАЦИЯ ==============
+        async function initApp() {
+            console.log("🚀 Need for Party инициализируется...");
+            
+            // Инициализируем Telegram WebApp
+            if (tg && tg.expand) {
+                tg.expand();
+                tg.MainButton.hide();
+            }
+            
+            // Проверяем существующего пользователя
+            await checkExistingUser();
+            
+            // Генерируем заглушки для тестов
+            generateTestData();
+        }
+        
+        // ============== МЕНЮ И НАВИГАЦИЯ ==============
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            
+            sidebar.classList.toggle('active');
+            
+            // Показываем/скрываем оверлей на мобильных
+            if (overlay) {
+                if (sidebar.classList.contains('active') && window.innerWidth <= 768) {
+                    overlay.style.display = 'block';
+                    // Блокируем скролл тела при открытом меню
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    overlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+            
+            // Закрываем меню при клике на оверлей
+            if (overlay) {
+                overlay.onclick = function() {
+                    sidebar.classList.remove('active');
+                    overlay.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        }
+        
+        function showPage(pageId) {
+            // Скрыть все страницы
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Скрыть активные элементы меню
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Показать выбранную страницу
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            
+            // Активировать элемент меню
+            const menuItem = document.querySelector(`.menu-item[onclick*="${pageId}"]`);
+            if (menuItem) {
+                menuItem.classList.add('active');
+            }
+            
+            // Закрыть сайдбар на мобильных
+            if (window.innerWidth <= 768) {
+                toggleSidebar(); // Закрываем меню
+            }
+            
+            // Загрузить контент страницы
+            loadPageContent(pageId);
+            
+            currentPage = pageId;
+        }
+        
+        function loadPageContent(pageId) {
+            switch(pageId) {
+                case 'verification':
+                    loadVerificationPage();
+                    break;
+                case 'parties':
+                    loadPartiesPage();
+                    break;
+                case 'discounts':
+                    loadDiscountsPage();
+                    break;
+                case 'roles':
+                    loadRolesPage();
+                    break;
+                case 'gallery':
+                    loadGalleryPage();
+                    break;
+                case 'tickets':
+                    loadTicketsPage();
+                    break;
+                case 'support':
+                    loadSupportPage();
+                    break;
+            }
+        }
+        
+        // ============== АВТОРИЗАЦИЯ И РЕГИСТРАЦИЯ ==============
+        async function checkExistingUser() {
+            try {
+                showLoading(true);
+                
+                // Проверяем localStorage
+                const savedUser = localStorage.getItem('nfp_user');
+                if (savedUser) {
+                    const user = JSON.parse(savedUser);
+                    await loginUser(user);
+                    showNotification(`👋 С возвращением, ${user.name}!`, 'success');
+                    return true;
+                }
+                
+                showNotification("📝 Заполни данные для регистрации", "info");
+                return false;
+                
+            } catch (error) {
+                console.error("Ошибка проверки пользователя:", error);
+                showNotification("Ошибка соединения", "error");
+                return false;
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function registerUser() {
+            console.log("🔵 registerUser вызвана");
+            
+            try {
+                showLoading(true);
+                
+                // Получаем данные
+                const name = document.getElementById('userName').value.trim();
+                const surname = document.getElementById('userSurname').value.trim();
+                const email = document.getElementById('userEmail').value.trim();
+                const nickname = document.getElementById('userNickname').value.trim();
+                const referCode = document.getElementById('userReferCode')?.value.trim() || '';
+                
+                console.log("📝 Данные:", { name, surname, email, nickname, referCode });
+                
+                // Валидация
+                if (!name || !surname || !email || !nickname) {
+                    showNotification("Заполни все поля!", "error");
+                    showLoading(false);
+                    return;
+                }
+                
+                // Отправляем запрос
+                console.log("📤 Отправка запроса на сервер...");
+                const response = await fetch('http://localhost:8000/api/user/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        surname: surname,
+                        email: email,
+                        nickname: nickname,
+                        refer_from: referCode || null
+                    })
+                });
+                
+                console.log("📥 Ответ получен, статус:", response.status);
+                
+                const result = await response.json();
+                console.log("📊 Результат сервера:", result);
+                
+                if (result.success && result.user) {
+                    console.log("✅ Успешная регистрация, пользователь:", result.user);
+                    
+                    // Сохраняем в localStorage
+                    localStorage.setItem('nfp_user', JSON.stringify(result.user));
+                    
+                    // Логиним
+                    await loginUser(result.user);
+                    
+                    showNotification("🎉 Регистрация успешна!", "success");
+                } else {
+                    console.log("❌ Ошибка регистрации:", result.message);
+                    showNotification(result.message || "Ошибка регистрации", "error");
+                }
+                
+            } catch (error) {
+                console.error("💥 Критическая ошибка:", error);
+                showNotification("Ошибка подключения к серверу", "error");
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function loginUser(userData) {
+            console.log("🔵 loginUser вызван с данными:", userData);
+            
+            if (!userData || typeof userData !== 'object') {
+                console.error("❌ Неверные данные пользователя:", userData);
+                return;
+            }
+            
+            currentUser = userData;
+            
+            // Обновляем шапку
+            document.getElementById('userNameDisplay').textContent = userData.nickname || userData.name || "Гость";
+            document.getElementById('userRankDisplay').textContent = userData.current_rank || "Участник";
+            
+            // Переключаем экраны
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('header').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'block';
+            
+            // Обновляем статистику
+            updateUserInterface(userData);
+            
+            // Генерируем QR-код
+            generateQRCode();
+            
+            console.log("✅ Пользователь авторизован");
+        }
+        
+        function logout() {
+            localStorage.removeItem('nfp_user');
+            currentUser = null;
+            
+            document.getElementById('welcomeScreen').style.display = 'flex';
+            document.getElementById('header').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'none';
+
+            document.getElementById('sidebar').classList.remove('active');
+            
+            showNotification("👋 До встречи!", "info");
+        }
+        
+        // ============== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ==============
+        function updateUserInterface(user) {
+            // Статистика
+            document.getElementById('statVisits').textContent = user.visits_count || 0;
+            document.getElementById('statInvited').textContent = user.invited_count || 0;
+            document.getElementById('statSpent').textContent = `${user.total_bar_spent || 0}₽`;
+            document.getElementById('statBattles').textContent = user.battle_participations || 0;
+            
+            // Реферальный код
+            if (user.refer) {
+                document.getElementById('referCode').textContent = user.refer;
+            }
+            
+            // Роль
+            document.getElementById('currentRole').textContent = user.current_rank || "Участник";
+        }
+        
+        function generateQRCode() {
+            if (!currentUser) return;
+            
+            console.log("🔵 generateQRCode вызвана");
+            
+            // ВРЕМЕННО ОТКЛЮЧИ QR
+            const qrContainer = document.getElementById('qrcode');
+            if (qrContainer) {
+                qrContainer.innerHTML = '<div style="padding: 20px; color: #6666aa;">QR-код временно отключен</div>';
+            }
+            return;
+        }
+        // ============== ЗАГРУЗКА КОНТЕНТА СТРАНИЦ ==============
+        function loadVerificationPage() {
+            const content = document.getElementById('verificationContent');
+            
+            if (currentUser && currentUser.is_verificated) {
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 30px 0;">
+                        <div style="font-size: 48px; color: #00ff88; margin-bottom: 20px;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3 style="color: #00ff88; margin-bottom: 15px;">✅ Вы верифицированы!</h3>
+                        <p style="color: #a0a0ff;">Ваш аккаунт прошел проверку и подтвержден</p>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="color: #00ccff; margin-bottom: 10px;">Зачем нужна верификация?</h3>
+                        <p style="color: #a0a0ff; line-height: 1.6;">
+                            Верификация нужна для подтверждения вашей личности. 
+                            После верификации вы получаете:
+                        </p>
+                        <ul style="color: #a0a0ff; margin: 15px 0 15px 20px; line-height: 1.6;">
+                            <li>✅ Доступ ко всем вечеринкам</li>
+                            <li>✅ Персональные скидки</li>
+                            <li>✅ Быстрый вход по QR-коду</li>
+                            <li>✅ Повышение статуса в системе</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px; border: 2px dashed rgba(0, 200, 255, 0.3); border-radius: 12px; margin: 20px 0;">
+                        <div style="font-size: 48px; color: #ffcc00; margin-bottom: 15px;">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h3 style="color: #ffcc00; margin-bottom: 10px;">Сделайте селфи</h3>
+                        <p style="color: #a0a0ff; margin-bottom: 20px;">
+                            Сфотографируйтесь на фоне светлого лица
+                        </p>
+                        <button class="btn btn-primary" onclick="takeVerificationPhoto()">
+                            <i class="fas fa-camera"></i> Сделать фото
+                        </button>
+                        <button class="btn btn-secondary" onclick="uploadVerificationPhoto()" style="margin-top: 10px;">
+                            <i class="fas fa-upload"></i> Загрузить фото
+                        </button>
+                    </div>
+                    
+                    <div style="font-size: 12px; color: #6666aa; text-align: center; margin-top: 20px;">
+                        Ваше фото будет проверено в течение 24 часов
+                    </div>
+                `;
+            }
+        }
+        
+        function loadPartiesPage() {
+            const partiesList = document.getElementById('partiesList');
+            
+            // Тестовые данные
+            const parties = [
+                {
+                    id: 1,
+                    name: "Новогодняя ночь 🎄",
+                    location: "Клуб 'Ледниковый'",
+                    date: "31.01.2026 22:00",
+                    seats: "45/200",
+                    price: "2500₽",
+                    available: true
+                },
+                {
+                    id: 2,
+                    name: "Рождественский бал ✨",
+                    location: "Ресторан 'Сибирь'",
+                    date: "15.01.2026 21:00",
+                    seats: "12/150",
+                    price: "3500₽",
+                    available: true
+                },
+                {
+                    id: 3,
+                    name: "Зимний фестиваль ❄️",
+                    location: "Бар 'У камина'",
+                    date: "10.02.2026 20:00",
+                    seats: "87/100",
+                    price: "1800₽",
+                    available: true
+                }
+            ];
+            
+            let html = '';
+            parties.forEach(party => {
+                html += `
+                    <div class="party-card">
+                        <div class="party-name">${party.name}</div>
+                        <div class="party-details">
+                            <div class="party-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${party.location}</span>
+                            </div>
+                            <div class="party-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>${party.date}</span>
+                            </div>
+                            <div class="party-detail">
+                                <i class="fas fa-user-friends"></i>
+                                <span>${party.seats} мест</span>
+                            </div>
+                            <div class="party-detail">
+                                <i class="fas fa-tag"></i>
+                                <span>${party.price}</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="buyTicket(${party.id})" ${!party.available ? 'disabled' : ''}>
+                            <i class="fas fa-shopping-cart"></i>
+                            ${party.available ? 'Купить билет' : 'Распродано'}
+                        </button>
+                    </div>
+                `;
+            });
+            
+            partiesList.innerHTML = html;
+        }
+        
+        function loadDiscountsPage() {
+            const content = document.getElementById('discountsContent');
+            
+            const userVisits = currentUser?.visits_count || 0;
+            const userInvited = currentUser?.invited_count || 0;
+            const userVerified = currentUser?.is_verificated || false;
+            const userSpent = currentUser?.total_bar_spent || 0;
+            
+            // Расчет скидок
+            const verificationDiscount = userVerified ? 2 : 0;
+            const inviteDiscount = Math.min(userInvited, 10); // максимум 10%
+            let visitDiscount = 0;
+            let roleBonus = 0;
+            
+            // Расчет скидки за посещения и бонуса за роли
+            if (userVisits >= 10) {
+                visitDiscount = 10;
+                roleBonus = 3; // за все роли
+            } else if (userVisits >= 5) {
+                visitDiscount = 5;
+            } else if (userVisits >= 3) {
+                visitDiscount = 2;
+            }
+            
+            const totalDiscount = verificationDiscount + inviteDiscount + visitDiscount + roleBonus;
+            
+            content.innerHTML = `
+                <div style="margin-bottom: 25px;">
+                    <h3 style="color: #00ccff; margin-bottom: 15px;">🎁 Система скидок</h3>
+                    <p style="color: #a0a0ff; line-height: 1.6; margin-bottom: 20px;">
+                        Максимальная скидка на вечеринку: <strong style="color: #ffcc00;">50%</strong><br>
+                        Скидки суммируются, но не могут превышать 50%
+                    </p>
+                </div>
+                
+                <!-- Прогресс-бар общей скидки -->
+                <div style="margin: 25px 0; padding: 20px; background: rgba(20, 20, 40, 0.7); border-radius: 12px; border: 1px solid rgba(0, 200, 255, 0.2);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <div style="font-weight: 600; color: #00ccff;">Ваша текущая скидка</div>
+                        <div style="font-weight: 700; font-size: 24px; color: #00ff88;">${totalDiscount}%</div>
+                    </div>
+                    <div style="background: rgba(0, 0, 0, 0.3); height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 10px;">
+                        <div style="width: ${Math.min(totalDiscount * 2, 100)}%; height: 100%; background: linear-gradient(90deg, #00ccff, #00ff88); border-radius: 5px;"></div>
+                    </div>
+                    <div style="color: #6666aa; font-size: 12px; text-align: center;">
+                        До максимума: ${50 - totalDiscount}%
+                    </div>
+                </div>
+                
+                <!-- Детали скидок -->
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #ffcc00; margin-bottom: 15px; border-bottom: 1px solid rgba(255, 204, 0, 0.3); padding-bottom: 5px;">
+                        <i class="fas fa-star"></i> Компоненты вашей скидки
+                    </h4>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="color: #a0a0ff;">Верификация</div>
+                            <div style="color: ${userVerified ? '#00ff88' : '#ff6666'}; font-weight: 600;">
+                                ${verificationDiscount}% ${userVerified ? '✅' : '❌'}
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="color: #a0a0ff;">Приглашенные (${userInvited}/10)</div>
+                            <div style="color: #00ccff; font-weight: 600;">+${inviteDiscount}%</div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                            <div style="color: #a0a0ff;">Посещения (${userVisits}/10)</div>
+                            <div style="color: #00ccff; font-weight: 600;">+${visitDiscount}%</div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                            <div style="color: #a0a0ff;">Бонус за роли</div>
+                            <div style="color: #ffcc00; font-weight: 600;">+${roleBonus}%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Как получить скидку -->
+                <div class="party-card" style="background: linear-gradient(45deg, rgba(0, 102, 255, 0.1), rgba(204, 0, 255, 0.1));">
+                    <h4 style="color: #ffcc00; margin-bottom: 15px;">
+                        <i class="fas fa-gift"></i> Как получить скидку?
+                    </h4>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="color: #00ff88; font-size: 20px;">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #a0a0ff;">Верификация</div>
+                                <div style="color: #6666aa; font-size: 12px;">Пройти полную проверку: <strong>+2%</strong></div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="color: #00ccff; font-size: 20px;">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #a0a0ff;">Приглашение друзей</div>
+                                <div style="color: #6666aa; font-size: 12px;">За каждого приглашенного: <strong>+1%</strong> (макс. 10%)</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="color: #ff6666; font-size: 20px;">
+                                <i class="fas fa-glass-cheers"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #a0a0ff;">Посещения вечеринок</div>
+                                <div style="color: #6666aa; font-size: 12px;">
+                                    3 посещения: <strong>+2%</strong> (Весельчак)<br>
+                                    5 посещений: <strong>+5%</strong> (Тусовщик)<br>
+                                    10 посещений: <strong>+10%</strong> (Король тусовок)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="color: #ffcc00; font-size: 20px;">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; color: #a0a0ff;">Бонус за все роли</div>
+                                <div style="color: #6666aa; font-size: 12px;">Получить все роли: <strong>+3%</strong> и роль Легенда</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(255, 204, 0, 0.05); border-radius: 10px; border: 1px solid rgba(255, 204, 0, 0.2);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <i class="fas fa-shield-alt" style="color: #ffcc00;"></i>
+                        <div style="font-weight: 600; color: #ffcc00;">Скидка от администратора</div>
+                    </div>
+                    <div style="color: #a0a0ff; font-size: 14px;">
+                        Дополнительные скидки могут быть выданы администратором за особые заслуги, 
+                        активность на вечеринках или победы в конкурсах.
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadRolesPage() {
+            const content = document.getElementById('rolesContent');
+            
+            const roles = [
+                {
+                    name: "🎪 Участник",
+                    description: "Базовая роль при регистрации",
+                    requirements: "Зарегистрироваться в системе",
+                    discount: "0%",
+                    color: "#00ccff",
+                    icon: "fas fa-user"
+                },
+                {
+                    name: "🎲 Рисковый",
+                    description: "Для проверенных пользователей",
+                    requirements: "Пройти полную верификацию (паспортные данные)",
+                    discount: "Базовый доступ + возможность верификации",
+                    color: "#ff6666",
+                    icon: "fas fa-shield-alt"
+                },
+                {
+                    name: "💃 Душа компании",
+                    description: "За активное приглашение друзей",
+                    requirements: "Пригласить 5 друзей",
+                    discount: "Социальный статус",
+                    color: "#ff00cc",
+                    icon: "fas fa-users"
+                },
+                {
+                    name: "😄 Весельчак",
+                    description: "За щедрость в баре",
+                    requirements: "Потратить 3000₽ в баре (выдается админом)",
+                    discount: "+2% постоянная скидка",
+                    color: "#ffcc00",
+                    icon: "fas fa-laugh"
+                },
+                {
+                    name: "🎉 Тусовщик",
+                    description: "За регулярное посещение вечеринок",
+                    requirements: "Посетить 5 вечеринок",
+                    discount: "+5% постоянная скидка",
+                    color: "#cc00ff",
+                    icon: "fas fa-glass-cheers"
+                },
+                {
+                    name: "🏆 Ас тусовок",
+                    description: "Элитный статус за активность",
+                    requirements: "Посетить 10 вечеринок",
+                    discount: "+10% постоянная скидка",
+                    color: "#ff0066",
+                    icon: "fas fa-crown"
+                },
+                {
+                    name: "💃 Танцор",
+                    description: "За участие в танцевальных батлах",
+                    requirements: "Участвовать в батлах (выдается админом)",
+                    discount: "Привилегии на танцполе",
+                    color: "#00ff88",
+                    icon: "fas fa-music"
+                },
+                {
+                    name: "✨ Ас танцпола",
+                    description: "Мастер танцевальных батлов",
+                    requirements: "3 посещения + выступления на батлах (админ)",
+                    discount: "VIP доступ к батлам",
+                    color: "#00ffff",
+                    icon: "fas fa-star"
+                },
+                {
+                    name: "🍺 Любитель выпить",
+                    description: "За значительные траты в баре",
+                    requirements: "Потратить 5000₽ в баре (админ)",
+                    discount: "Персональные бонусы в баре",
+                    color: "#ff8800",
+                    icon: "fas fa-beer"
+                },
+                {
+                    name: "👑 Глава бара",
+                    description: "Максимальный статус в баре",
+                    requirements: "Потратить 10000₽ в баре (админ)",
+                    discount: "Персональный бокал + привилегии",
+                    color: "#ffcc00",
+                    icon: "fas fa-crown"
+                },
+                {
+                    name: "🌟 Легенда",
+                    description: "Высшая награда системы",
+                    requirements: "Получить ВСЕ роли",
+                    discount: "+3% постоянная скидка + вечный статус",
+                    color: "#ffff00",
+                    icon: "fas fa-trophy"
+                }
+            ];
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <p style="color: #a0a0ff; line-height: 1.6;">
+                        Роли дают привилегии, скидки и особый статус в нашем сообществе.
+                        Каждая роль открывает новые возможности!
+                    </p>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px; max-height: 500px; overflow-y: auto; padding-right: 10px;">
+            `;
+            
+            roles.forEach(role => {
+                const hasRole = false; // Здесь можно добавить проверку, есть ли у пользователя эта роль
+                
+                html += `
+                    <div style="background: ${role.color}15; border: 2px solid ${role.color}40; border-radius: 12px; padding: 15px; position: relative;">
+                        ${hasRole ? `
+                            <div style="position: absolute; top: 10px; right: 10px; background: #00ff88; color: #000; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700;">
+                                ✅ ВАША
+                            </div>
+                        ` : ''}
+                        
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                            <div style="font-size: 24px; color: ${role.color};">
+                                <i class="${role.icon}"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; font-size: 18px; color: ${role.color}; margin-bottom: 5px;">
+                                    ${role.name}
+                                </div>
+                                <div style="color: #a0a0ff; font-size: 14px; margin-bottom: 8px;">
+                                    ${role.description}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid ${role.color}20;">
+                            <div>
+                                <div style="font-size: 12px; color: #8888cc; margin-bottom: 3px;">Требования:</div>
+                                <div style="font-size: 13px; color: ${role.color}; font-weight: 600;">${role.requirements}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 12px; color: #8888cc; margin-bottom: 3px;">Награда:</div>
+                                <div style="font-size: 13px; color: #ffcc00; font-weight: 600;">${role.discount}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(0, 200, 255, 0.05); border-radius: 10px; border: 1px solid rgba(0, 200, 255, 0.2);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <i class="fas fa-info-circle" style="color: #00ccff;"></i>
+                        <div style="font-weight: 600; color: #00ccff;">Как получить роли?</div>
+                    </div>
+                    <div style="color: #a0a0ff; font-size: 14px;">
+                        • Роли с отметкой "(админ)" выдаются администратором вручную<br>
+                        • Автоматические роли присваиваются при достижении условий<br>
+                        • Некоторые роли дают постоянные скидки на все вечеринки<br>
+                        • Роль "Легенда" — высшая награда за получение всех ролей
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+        }
+        
+        function loadGalleryPage() {
+            const content = document.getElementById('galleryContent');
+            
+            const gallery = [
+                { id: 1, title: "Новогодняя вечеринка 2025", desc: "Более 200 гостей!" },
+                { id: 2, title: "Хэллоуин Party", desc: "Самые креативные костюмы" },
+                { id: 3, title: "Летний фестиваль", desc: "3 дня музыки и веселья" },
+                { id: 4, title: "Рождественский ужин", desc: "Теплая атмосфера" },
+                { id: 5, title: "Весенний бал", desc: "Элегантно и стильно" },
+                { id: 6, title: "Осенние встречи", desc: "Душевные посиделки" }
+            ];
+            
+            let html = `
+                <div style="margin-bottom: 20px;">
+                    <p style="color: #a0a0ff; line-height: 1.6;">
+                        Фотографии с наших лучших вечеринок. Присоединяйся к следующей!
+                    </p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px;">
+            `;
+            
+            gallery.forEach(item => {
+                const colors = ['#0066ff', '#cc00ff', '#ff0066', '#00ccff', '#ffcc00', '#00ff88'];
+                const color = colors[item.id % colors.length];
+                
+                html += `
+                    <div style="background: ${color}20; border: 1px solid ${color}40; border-radius: 10px; padding: 15px; text-align: center;">
+                        <div style="font-size: 32px; margin-bottom: 10px; color: ${color};">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div style="font-weight: 600; color: ${color}; margin-bottom: 5px;">
+                            ${item.title}
+                        </div>
+                        <div style="font-size: 12px; color: #a0a0ff;">
+                            ${item.desc}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+        }
+        
+        function loadTicketsPage() {
+            const ticketsList = document.getElementById('ticketsList');
+            
+            const tickets = [
+                {
+                    id: 1,
+                    party: "Новогодняя ночь 🎄",
+                    date: "31.01.2026 22:00",
+                    price: "2500₽",
+                    status: "active",
+                    qr: true
+                },
+                {
+                    id: 2,
+                    party: "Рождественский бал ✨",
+                    date: "15.01.2026 21:00",
+                    price: "3500₽",
+                    status: "used",
+                    qr: false
+                },
+                {
+                    id: 3,
+                    party: "Осенний джем 🍂",
+                    date: "15.10.2025 20:00",
+                    price: "1800₽",
+                    status: "used",
+                    qr: false
+                }
+            ];
+            
+            if (tickets.length === 0) {
+                ticketsList.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div style="font-size: 48px; color: #6666aa; margin-bottom: 20px;">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <h3 style="color: #a0a0ff; margin-bottom: 10px;">У вас нет билетов</h3>
+                        <p style="color: #6666aa;">Купите свой первый билет в разделе "Вечеринки"</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div style="display: flex; flex-direction: column; gap: 15px;">';
+            
+            tickets.forEach(ticket => {
+                const statusColor = ticket.status === 'active' ? '#00ff88' : 
+                                  ticket.status === 'used' ? '#ff6666' : '#ffcc00';
+                const statusText = ticket.status === 'active' ? 'Активен' : 
+                                  ticket.status === 'used' ? 'Использован' : 'Отменен';
+                
+                html += `
+                    <div class="party-card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div>
+                                <div class="party-name" style="margin-bottom: 5px;">${ticket.party}</div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #a0a0ff;">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    <span>${ticket.date}</span>
+                                </div>
+                            </div>
+                            <div style="background: ${statusColor}20; color: ${statusColor}; padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                                ${statusText}
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                            <div style="font-weight: 600; color: #00ccff; font-size: 18px;">
+                                ${ticket.price}
+                            </div>
+                            ${ticket.status === 'active' ? `
+                                <button class="btn btn-secondary" onclick="showTicketQR(${ticket.id})" style="width: auto; padding: 8px 15px;">
+                                    <i class="fas fa-qrcode"></i> Показать QR
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            ticketsList.innerHTML = html;
+        }
+        
+        function loadSupportPage() {
+            const content = document.getElementById('supportContent');
+            
+            content.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #00ccff; margin-bottom: 15px;">📞 Наши контакты</h3>
+                    <p style="color: #a0a0ff; line-height: 1.6;">
+                        Мы всегда готовы помочь! Свяжитесь с нами любым удобным способом.
+                    </p>
+                </div>
+                
+                <div class="party-card" style="background: linear-gradient(45deg, rgba(0, 102, 255, 0.1), rgba(0, 200, 255, 0.1));">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="font-size: 24px; color: #0066ff;">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: #0066ff;">Телефон поддержки</div>
+                            <div style="color: #a0a0ff; font-size: 18px; font-weight: 600;">+7 (XXX) XXX-XX-XX</div>
+                            <div style="color: #6666aa; font-size: 12px; margin-top: 5px;">Ежедневно с 10:00 до 22:00</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="party-card" style="background: linear-gradient(45deg, rgba(255, 0, 100, 0.1), rgba(255, 100, 0, 0.1));">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="font-size: 24px; color: #ff0066;">
+                            <i class="fab fa-telegram"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: #ff0066;">Telegram канал</div>
+                            <div style="color: #a0a0ff; font-size: 18px; font-weight: 600;">@needforparty_support</div>
+                            <div style="color: #6666aa; font-size: 12px; margin-top: 5px;">Быстрые ответы в чате</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="party-card" style="background: linear-gradient(45deg, rgba(0, 255, 100, 0.1), rgba(0, 255, 200, 0.1));">
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <div style="font-size: 24px; color: #00ff88;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; color: #00ff88;">Email</div>
+                            <div style="color: #a0a0ff; font-size: 18px; font-weight: 600;">support@needforparty.ru</div>
+                            <div style="color: #6666aa; font-size: 12px; margin-top: 5px;">Ответ в течение 24 часов</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 20px; background: rgba(0, 200, 255, 0.05); border-radius: 10px; border: 1px solid rgba(0, 200, 255, 0.2);">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                        <i class="fas fa-question-circle" style="color: #ffcc00;"></i>
+                        <div style="font-weight: 600; color: #ffcc00;">Частые вопросы</div>
+                    </div>
+                    
+                    <div style="color: #a0a0ff; margin-bottom: 10px;">
+                        <strong>Q:</strong> Как вернуть билет?
+                    </div>
+                    <div style="color: #6666aa; font-size: 14px; margin-bottom: 15px;">
+                        <strong>A:</strong> Возврат возможен за 48 часов до начала вечеринки.
+                    </div>
+                    
+                    <div style="color: #a0a0ff; margin-bottom: 10px;">
+                        <strong>Q:</strong> Что делать если потерял QR-код?
+                    </div>
+                    <div style="color: #6666aa; font-size: 14px; margin-bottom: 15px;">
+                        <strong>A:</strong> QR-код всегда доступен в приложении в разделе "Мои билеты".
+                    </div>
+                    
+                    <div style="color: #a0a0ff; margin-bottom: 10px;">
+                        <strong>Q:</strong> Как пригласить друзей?
+                    </div>
+                    <div style="color: #6666aa; font-size: 14px;">
+                        <strong>A:</strong> Используйте свой реферальный код на главной странице.
+                    </div>
+                </div>
+            `;
+        }
+        
+        // ============== ФУНКЦИОНАЛ ==============
+        function copyReferCode() {
+            const referCode = document.getElementById('referCode').textContent;
+            if (referCode && referCode !== 'XXXXXX') {
+                navigator.clipboard.writeText(referCode)
+                    .then(() => showNotification("✅ Код скопирован в буфер!", "success"))
+                    .catch(() => showNotification("❌ Не удалось скопировать", "error"));
+            } else {
+                showNotification("❌ Нет реферального кода для копирования", "error");
+            }
+        }
+        
+        function changeRole() {
+            const roleSelect = document.getElementById('roleSelect');
+            const selectedRole = roleSelect.options[roleSelect.selectedIndex].text;
+            
+            document.getElementById('currentRole').textContent = selectedRole;
+            document.getElementById('userRankDisplay').textContent = selectedRole;
+            
+            if (currentUser) {
+                currentUser.current_rank = selectedRole;
+                localStorage.setItem('nfp_user', JSON.stringify(currentUser));
+            }
+            
+            showNotification(`✅ Роль изменена на: ${selectedRole}`, "success");
+        }
+        
+        function buyTicket(partyId) {
+            // Показываем модальное окно
+            const modal = document.getElementById('ticketModal');
+            modal.classList.add('active');
+            
+            showNotification("🎫 Открыта форма покупки билета", "info");
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('ticketModal');
+            modal.classList.remove('active');
+        }
+        
+        function takeVerificationPhoto() {
+            showNotification("📷 Функция фото камеры в разработке", "info");
+        }
+        
+        function uploadVerificationPhoto() {
+            showNotification("📁 Функция загрузки фото в разработке", "info");
+        }
+        
+        function showTicketQR(ticketId) {
+            showNotification(`📱 QR-код билета #${ticketId} (в разработке)`, "info");
+        }
+        
+        // ============== УТИЛИТЫ ==============
+        function showNotification(message, type = "info") {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification notification-${type}`;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, type === "error" ? 5000 : 3000);
+        }
+        
+        function showLoading(show) {
+            const loading = document.getElementById('loading');
+            loading.style.display = show ? 'flex' : 'none';
+        }
+        
+        function generateTestData() {
+            // Тестовые данные для разработки
+            const testUser = {
+                id: 999,
+                name: "Тестовый Пользователь",
+                nickname: "test_user",
+                email: "test@example.com",
+                refer: "25012025143015TS",
+                current_rank: "Участник 🎪",
+                visits_count: 5,
+                invited_count: 3,
+                total_bar_spent: 12500,
+                battle_participations: 2,
+                is_verificated: false,
+                is_ban: false
+            };
+            
+            // Для быстрого тестирования раскомментируйте:
+            // localStorage.setItem('nfp_user', JSON.stringify(testUser));
+            // loginUser(testUser);
+        }
+        
+        // ============== ЗАПУСК ПРИЛОЖЕНИЯ ==============
+        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Глобальные функции для HTML
+        window.registerUser = registerUser;
+        window.toggleSidebar = toggleSidebar;
+        window.showPage = showPage;
+        window.copyReferCode = copyReferCode;
+        window.changeRole = changeRole;
+        window.buyTicket = buyTicket;
+        window.closeModal = closeModal;
+        window.takeVerificationPhoto = takeVerificationPhoto;
+        window.uploadVerificationPhoto = uploadVerificationPhoto;
+        window.showTicketQR = showTicketQR;
+        window.logout = logout;
+    </script>
+</body>
+</html>

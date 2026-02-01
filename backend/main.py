@@ -22,7 +22,11 @@ app = FastAPI(
 # Настройка CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # В продакшене укажите конкретные домены
+    allow_origins=[
+        "https://karina0409.github.io",  # Ваш GitHub Pages
+        "http://localhost",  # Локальная разработка
+        "http://localhost:8080",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
