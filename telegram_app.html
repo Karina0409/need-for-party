@@ -46,22 +46,21 @@
         }
 
         .auth-form {
-            background: rgba(20, 20, 40, 0.95); /* Увеличить прозрачность */
-            backdrop-filter: blur(25px); /* Увеличить размытие */
+            background: rgba(20, 20, 40, 0.95);
+            backdrop-filter: blur(25px);
             border-radius: 20px;
-            padding: 35px 30px; /* Увеличить отступы */
-            border: 2px solid rgba(0, 200, 255, 0.3); /* Более яркая обводка */
+            padding: 35px 30px;
+            border: 2px solid rgba(0, 200, 255, 0.3);
             box-shadow: 
                 0 15px 50px rgba(0, 0, 0, 0.6),
                 0 0 30px rgba(0, 200, 255, 0.1) inset,
-                0 0 0 1px rgba(255, 255, 255, 0.05) inset; /* Добавить внутреннюю обводку */
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
             width: 100%;
-            max-width: 420px; /* Немного шире */
+            max-width: 420px;
             margin: 0 auto;
             animation: glow 3s infinite alternate;
         }
 
-        /* Добавьте анимацию свечения */
         @keyframes glow {
             0% {
                 box-shadow: 
@@ -79,10 +78,10 @@
 
         .input-field {
             width: 100%;
-            padding: 18px 20px; /* Больше отступов */
-            background: rgba(10, 10, 30, 0.8); /* Темнее фон */
-            border: 2px solid rgba(0, 200, 255, 0.4); /* Более яркая обводка */
-            border-radius: 15px; /* Больше скругление */
+            padding: 18px 20px;
+            background: rgba(10, 10, 30, 0.8);
+            border: 2px solid rgba(0, 200, 255, 0.4);
+            border-radius: 15px;
             color: white;
             font-size: 16px;
             transition: all 0.3s ease;
@@ -102,7 +101,6 @@
             font-weight: 400;
         }
 
-        /* Добавьте этот стиль для кнопки регистрации */
         .btn-register {
             background: linear-gradient(45deg, #0066ff, #cc00ff, #ff0066);
             background-size: 200% 200%;
@@ -130,8 +128,8 @@
         }
 
         .form-title {
-            font-size: 28px; /* Увеличить размер */
-            font-weight: 800; /* Жирнее */
+            font-size: 28px;
+            font-weight: 800;
             margin-bottom: 30px;
             text-align: center;
             background: linear-gradient(45deg, #00ccff, #ff00cc, #ffcc00);
@@ -195,7 +193,6 @@
             position: relative;
         }
         
-        /* Бургер-меню - улучшенная версия */
         .tg-burger-btn {
             background: transparent;
             border: none;
@@ -209,10 +206,9 @@
             justify-content: center;
             border-radius: 10px;
             transition: all 0.3s ease;
-            z-index: 1002; /* Выше чем сайдбар */
+            z-index: 1002;
         }
 
-        /* На мобильных делаем кнопку больше */
         @media (max-width: 768px) {
             .tg-burger-btn {
                 width: 50px;
@@ -230,7 +226,7 @@
         .tg-sidebar {
             position: fixed;
             top: 0;
-            right: -300px; /* По умолчанию скрыт */
+            right: -300px;
             width: 280px;
             height: 100vh;
             background: rgba(20, 20, 40, 0.98);
@@ -243,16 +239,14 @@
             overflow-y: auto;
         }
         
-        /* Класс active показывает меню */
         .tg-sidebar.active {
             right: 0;
         }
 
-        /* На мобильных устройствах меню на весь экран */
         @media (max-width: 768px) {
             .tg-sidebar {
                 width: 100%;
-                right: -100%; /* Скрываем полностью за экраном */
+                right: -100%;
             }
             
             .tg-sidebar.active {
@@ -339,8 +333,7 @@
             text-align: center;
         }
 
-        /* Оверлей для закрытия меню на мобильных */
-        .tg-sidebar-overlay {
+        .sidebar-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -352,9 +345,8 @@
             z-index: 1000;
         }
 
-        /* Показываем оверлей только когда меню открыто на мобильных */
         @media (max-width: 768px) {
-            .tg-sidebar.active ~ .tg-sidebar-overlay {
+            .tg-sidebar.active ~ .sidebar-overlay {
                 display: block;
             }
         }
@@ -593,6 +585,24 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
+        .notification-success {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+            color: #00ff88;
+        }
+        
+        .notification-error {
+            background: rgba(255, 0, 68, 0.1);
+            border-color: rgba(255, 0, 68, 0.3);
+            color: #ff0044;
+        }
+        
+        .notification-info {
+            background: rgba(0, 200, 255, 0.1);
+            border-color: rgba(0, 200, 255, 0.3);
+            color: #00ccff;
+        }
+        
         /* Загрузка */
         .loading {
             display: flex;
@@ -653,7 +663,7 @@
         </div>
         
         <div class="burger-menu">
-            <button class="tg-burger-btn" onclick="toggleTgSidebar()">
+            <button class="tg-burger-btn" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
@@ -661,8 +671,8 @@
     
     <!-- Сайдбар меню -->
     <div class="tg-sidebar" id="tgSidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-title">Меню</div>
+        <div class="tg-sidebar-header">
+            <div class="tg-sidebar-title">Меню</div>
             <button class="close-btn" onclick="toggleSidebar()">
                 <i class="fas fa-times"></i>
             </button>
@@ -713,7 +723,6 @@
     
     <!-- Экран приветствия -->
     <div id="welcomeScreen" class="container">
-        <!-- Ваш существующий код приветствия -->
         <div class="logo-container">
             <div class="logo-glow"></div>
             <div class="logo">NEED FOR PARTY</div>
@@ -935,7 +944,6 @@
         let currentUser = null;
         let currentPage = 'home';
 
-
         console.log("🚀 Need for Party загружен");
         console.log("🌐 API URL:", API_URL);
         console.log("📱 Telegram WebApp:", typeof tg !== 'undefined' ? "доступен" : "не доступен");
@@ -960,7 +968,7 @@
         
         // ============== МЕНЮ И НАВИГАЦИЯ ==============
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
+            const sidebar = document.getElementById('tgSidebar');
             const overlay = document.getElementById('sidebarOverlay');
             
             sidebar.classList.toggle('active');
@@ -1009,7 +1017,7 @@
             
             // Закрыть сайдбар на мобильных
             if (window.innerWidth <= 768) {
-                toggleSidebar(); // Закрываем меню
+                toggleSidebar();
             }
             
             // Загрузить контент страницы
@@ -1173,7 +1181,8 @@
             document.getElementById('header').style.display = 'none';
             document.getElementById('mainApp').style.display = 'none';
 
-            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('tgSidebar').classList.remove('active');
+            document.getElementById('sidebarOverlay').style.display = 'none';
             
             showNotification("👋 До встречи!", "info");
         }
@@ -1207,6 +1216,7 @@
             }
             return;
         }
+        
         // ============== ЗАГРУЗКА КОНТЕНТА СТРАНИЦ ==============
         function loadVerificationPage() {
             const content = document.getElementById('verificationContent');

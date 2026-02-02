@@ -12,9 +12,7 @@ WEB_APP_URL = f"https://karina0409.github.io/need-for-party/telegram_app.html?t=
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# Добавляем версию для сброса кэша
 current_version = int(time.time())  # Текущее время в секундах
-WEB_APP_URL = f"https://karina0409.github.io/need-for-party/?v={current_version}"
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
