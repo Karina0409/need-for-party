@@ -12,7 +12,7 @@ WEB_APP_URL = f"https://karina0409.github.io/need-for-party/telegram_app.html?t=
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-current_version = int(time.time())  # Текущее время в секундах
+current_version = int(time.time())  # Текущее время в секундаx
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
@@ -30,7 +30,7 @@ def send_welcome(message):
         message.chat.id,
         f"👋 Привет, {message.from_user.first_name}!\n\n"
         "Добро пожаловать в **Need for Party** 🎉\n\n"
-        "Нажми кнопку ниже, чтобы открыть приложение",
+        "Нажми кнопку ниже, чтобы открыть приложение, вся информация и оплата будет проходить через Mini app, регистрируйся и будь с нами!",
         reply_markup=markup,
         parse_mode="Markdown"
     )
