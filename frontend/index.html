@@ -1195,17 +1195,233 @@
             document.getElementById('currentRole').textContent = user.current_rank || "Участник";
         }
         
-        function generateQRCode() {
-            if (!currentUser) return;
-            
+        async function generateQRCode(forceRefresh = false) {
             console.log("🔵 generateQRCode вызвана");
             
-            // ВРЕМЕННО ОТКЛЮЧИ QR
-            const qrContainer = document.getElementById('qrcode');
-            if (qrContainer) {
-                qrContainer.innerHTML = '<div style="padding: 20px; color: #6666aa;">QR-код временно отключен</div>';
+            if (!currentUser) {
+                console.log("❌ Нет текущего пользователя");
+                return;
             }
-            return;
+            
+            const qrContainer = document.getElementById('qrcode');
+            if (!qrContainer) {
+                console.log("❌ Контейнер QR не найден");
+                return;
+            }
+            
+            // Проверяем кэш
+            const now = Date.now();
+            if (!forceRefresh && window.qrCache && 
+                window.qrCache.userId === currentUser.id && 
+                (now - window.qrCache.timestamp) < 300000) { // 5 минут
+                
+                console.log("♻️ Используем кэшированный QR");
+                displayQRCached(qrContainer, window.qrCache.data);
+                return;
+            }
+            
+            try {
+                // Показываем загрузку
+                qrContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px 20px;">
+                        <div class="loader" style="margin: 0 auto 20px; width: 40px; height: 40px;"></div>
+                        <div style="color: #a0a0ff; font-size: 14px;">Генерация QR-кода...</div>
+                    </div>
+                `;
+                
+                // 1. Получаем данные пользователя с сервера
+                console.log(`📡 Запрос данных пользователя ${currentUser.id}...`);
+                const response = await fetch(`${API_URL}/api/user/${currentUser.id}/qr-data`);
+                
+                if (!response.ok) {
+                    throw new Error(`Ошибка сервера: ${response.status}`);
+                }
+                
+                const userData = await response.json();
+                console.log("📊 Данные для QR получены:", userData);
+                
+                // 2. Формируем компактные данные для QR
+                const qrData = {
+                    v: 1,  // версия формата
+                    id: userData.user_id,
+                    n: userData.nickname,  // nickname
+                    nm: userData.name,     // name
+                    sn: userData.surname,  // surname
+                    vf: userData.is_verified,  // verified
+                    bn: userData.is_banned,    // banned
+                    rf: userData.refer_code,   // refer code
+                    ph: userData.photo?.hash || null,  // photo hash
+                    pf: userData.photo?.format || null, // photo format
+                    ts: new Date().toISOString(),  // timestamp
+                    // Можно добавить ID текущей вечеринки если нужно
+                    // pid: 1  // party_id
+                };
+                
+                // Сохраняем в кэш
+                window.qrCache = {
+                    data: { qrData, userData },
+                    userId: currentUser.id,
+                    timestamp: now
+                };
+                
+                // 3. Генерируем QR
+                displayQRCode(qrContainer, qrData, userData);
+                
+            } catch (error) {
+                console.error('💥 Критическая ошибка:', error);
+                showQRError(qrContainer, error);
+            }
+        }
+
+        function displayQRCode(container, qrData, userData) {
+            container.innerHTML = '';
+            
+            // Создаем canvas для QR
+            const canvas = document.createElement('canvas');
+            container.appendChild(canvas);
+            
+            // Генерация QR
+            QRCode.toCanvas(canvas, JSON.stringify(qrData), {
+                width: 200,
+                margin: 2,
+                color: {
+                    dark: '#00ccff',
+                    light: '#0a0a1a'
+                },
+                errorCorrectionLevel: 'M'
+            }, function(error) {
+                if (error) {
+                    console.error('❌ Ошибка генерации QR:', error);
+                    showQRError(container, error);
+                    return;
+                }
+                
+                console.log('✅ QR-код сгенерирован успешно');
+                
+                // Стили для canvas
+                canvas.style.border = '3px solid #00ccff';
+                canvas.style.borderRadius = '12px';
+                canvas.style.boxShadow = '0 0 25px rgba(0, 200, 255, 0.4)';
+                canvas.style.background = '#0a0a1a';
+                canvas.style.padding = '10px';
+                
+                // Добавляем информацию
+                showQRInfo(container, userData);
+                
+                // Добавляем кнопки
+                addQRButtons(container);
+            });
+        }
+
+        function displayQRCached(container, cachedData) {
+            const { qrData, userData } = cachedData;
+            displayQRCode(container, qrData, userData);
+        }
+
+        function showQRInfo(container, userData) {
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'qr-info';
+            infoDiv.style.marginTop = '20px';
+            infoDiv.style.padding = '15px';
+            infoDiv.style.background = 'rgba(20, 20, 40, 0.7)';
+            infoDiv.style.borderRadius = '10px';
+            infoDiv.style.border = '1px solid rgba(0, 200, 255, 0.2)';
+            infoDiv.style.fontSize = '13px';
+            infoDiv.style.color = '#a0a0ff';
+            infoDiv.style.textAlign = 'center';
+            infoDiv.style.lineHeight = '1.6';
+            
+            const statusColor = userData.is_banned ? '#ff6666' : 
+                            userData.is_verified ? '#00ff88' : '#ffcc00';
+            const statusText = userData.is_banned ? '🚫 Забанен' : 
+                            userData.is_verified ? '✅ Верифицирован' : '⚠️ Не верифицирован';
+            
+            infoDiv.innerHTML = `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <div><strong>🆔 ID:</strong> ${userData.user_id}</div>
+                    <div><strong>👤 Ник:</strong> ${userData.nickname}</div>
+                </div>
+                <div style="margin-bottom: 10px;"><strong>👥 Имя:</strong> ${userData.name} ${userData.surname}</div>
+                <div style="margin-bottom: 10px; color: ${statusColor};">
+                    <strong>📊 Статус:</strong> ${statusText}
+                </div>
+                <div style="margin-bottom: 10px;"><strong>🎫 Реф. код:</strong> ${userData.refer_code}</div>
+                ${userData.photo ? `
+                    <div style="margin-bottom: 10px;">
+                        <strong>📷 Фото:</strong> Есть (${userData.photo.format}, ${Math.round(userData.photo.size/1024)} KB)
+                    </div>
+                ` : ''}
+                <div style="margin-bottom: 10px;">
+                    <strong>📈 Статистика:</strong> ${userData.stats.visits} посещений, ${userData.stats.invited} приглашённых
+                </div>
+                <div style="font-size: 11px; color: #6666aa; margin-top: 15px;">
+                    <i class="fas fa-clock"></i> Обновлено: ${new Date().toLocaleTimeString()}
+                </div>
+            `;
+            
+            container.appendChild(infoDiv);
+        }
+
+        function addQRButtons(container) {
+            const buttonContainer = document.createElement('div');
+            buttonContainer.style.display = 'flex';
+            buttonContainer.style.gap = '10px';
+            buttonContainer.style.marginTop = '15px';
+            buttonContainer.style.justifyContent = 'center';
+            
+            // Кнопка обновления
+            const refreshBtn = document.createElement('button');
+            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Обновить';
+            refreshBtn.className = 'btn btn-secondary';
+            refreshBtn.style.padding = '8px 15px';
+            refreshBtn.style.fontSize = '12px';
+            refreshBtn.onclick = () => {
+                console.log('🔄 Обновление QR по запросу пользователя');
+                generateQRCode(true); // force refresh
+            };
+            
+            // Кнопка копирования данных
+            const copyBtn = document.createElement('button');
+            copyBtn.innerHTML = '<i class="fas fa-copy"></i> Данные';
+            copyBtn.className = 'btn btn-secondary';
+            copyBtn.style.padding = '8px 15px';
+            copyBtn.style.fontSize = '12px';
+            copyBtn.onclick = () => {
+                if (window.qrCache && window.qrCache.data) {
+                    const dataStr = JSON.stringify(window.qrCache.data.userData, null, 2);
+                    navigator.clipboard.writeText(dataStr)
+                        .then(() => showNotification('✅ Данные скопированы в буфер', 'success'))
+                        .catch(() => showNotification('❌ Не удалось скопировать', 'error'));
+                }
+            };
+            
+            buttonContainer.appendChild(refreshBtn);
+            buttonContainer.appendChild(copyBtn);
+            container.appendChild(buttonContainer);
+        }
+
+        function showQRError(container, error) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 30px; color: #ff6666;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">⚠️</div>
+                    <div style="font-weight: bold; margin-bottom: 10px; font-size: 16px;">
+                        Ошибка генерации QR-кода
+                    </div>
+                    <div style="font-size: 14px; margin-bottom: 20px; color: #ff9999; padding: 10px; background: rgba(255, 100, 100, 0.1); border-radius: 8px;">
+                        ${error.message || 'Неизвестная ошибка'}
+                    </div>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button class="btn btn-primary" onclick="generateQRCode(true)" 
+                                style="padding: 10px 20px; font-size: 14px;">
+                            <i class="fas fa-redo"></i> Попробовать снова
+                        </button>
+                        <button class="btn btn-secondary" onclick="location.reload()"
+                                style="padding: 10px 20px; font-size: 14px;">
+                            <i class="fas fa-sync"></i> Перезагрузить страницу
+                        </button>
+                    </div>
+                </div>
+            `;
         }
         // ============== ЗАГРУЗКА КОНТЕНТА СТРАНИЦ ==============
         function loadVerificationPage() {

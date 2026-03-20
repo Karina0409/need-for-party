@@ -1,9 +1,9 @@
-# Environment variables
+# Секретные файлы
+encryption.key
 .env
-.env.local
-.env.production
-
-# Secrets
-*.key
-*.pem
-*.cert
+*.log
+temp_docs/
+__pycache__/
+*.pyc
+instance/
+.webassets-cache
